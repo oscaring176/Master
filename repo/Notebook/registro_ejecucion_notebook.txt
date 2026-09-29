@@ -1,0 +1,222 @@
+REGISTRO DE EJECUCION - Notebook_Pipeline_IA_SITP_PortalEldorado.ipynb
+Caso: SITP/TransMilenio - Portal Eldorado | Tarea 8 (SEM8) - Pipeline de IA
+Generado: 2026-09-23 20:14 UTC
+Metodo: nbclient.NotebookClient.execute() con kernel nuevo (equivalente a
+        'Entorno de ejecucion -> Reiniciar y ejecutar todo' de Colab/Jupyter).
+==============================================================================
+
+NOTEBOOK DE PIPELINE DE IA — PREDICCIÓN Y SEGMENTACIÓN
+------------------------------------------------------------------------------
+
+1. CONFIGURACIÓN DEL ENTORNO
+------------------------------------------------------------------------------
+  Librerías cargadas correctamente.
+  pandas: 3.0.2 | numpy: 2.4.4
+  scikit-learn: 1.8.0
+
+2. CARGA Y LIMPIEZA (ETL CONDENSADO)
+------------------------------------------------------------------------------
+  Archivo 'raw_portal_eldorado_nov2023.csv' encontrado localmente.
+  Filas brutas: 452 → filas tras acotar a los 5 accesos con extracción completa: 443
+  (2 accesos con extracción incompleta en este entorno quedan fuera del alcance; ver Tarea 7 para el detalle.)
+  Filas en formato largo (base del análisis): 13290
+  Duplicados en la clave acceso+fecha+intervalo: 0
+  % de observaciones atípicas (IQR por acceso+intervalo): 2.68 %
+                    linea                 estacion  \
+  0  (11) Zona K Calle 26  (06000) Portal Eldorado   
+  1  (11) Zona K Calle 26  (06000) Portal Eldorado   
+  2  (11) Zona K Calle 26  (06000) Portal Eldorado   
+  
+                            acceso       fecha intervalo  salidas  es_atipico  
+  0  (03) Acceso Peatonal Oriental  2023-11-01     00:00       13        True  
+  1  (03) Acceso Peatonal Oriental  2 ...(truncado)...
+
+3. VARIABLES DE CALENDARIO DERIVADAS
+------------------------------------------------------------------------------
+  Variables agregadas: dia_semana_num, dia_semana, es_fin_de_semana, hora_decimal
+            fecha dia_semana  es_fin_de_semana  \
+  7234 2023-11-22  miércoles             False   
+  9898 2023-11-22  miércoles             False   
+  1373 2023-11-16     jueves             False   
+  385  2023-11-05    domingo              True   
+  
+                                                acceso intervalo  hora_decimal  \
+  7234    (18) Acceso Peatonal Oriental (Discapacidad)     13:30         13.50    ...(truncado)...
+
+4. ARCHIVO DE DATOS DEPURADO (ENTREGABLE DE LA RÚBRICA)
+------------------------------------------------------------------------------
+  Archivo depurado guardado en: sitp_portal_eldorado_depurado_tarea8.csv  (13290 filas, 11 columnas)
+  El archivo original 'raw_portal_eldorado_nov2023.csv' no fue modificado.
+
+5. RECORDATORIO RÁPIDO DE EDA (DETALLE COMPLETO EN LA TAREA 7)
+------------------------------------------------------------------------------
+  Participación por acceso:
+  acceso
+  (21) Acceso Túnel PLAT1 Alimentación              53.0 %
+  (03) Acceso Peatonal Oriental                     31.6 %
+  (04) Acceso Peatonal Occidental                   15.1 %
+  (18) Acceso Peatonal Oriental (Discapacidad)       0.2 %
+  (19) Acceso Peatonal Occidental (Discapacidad)     0.0 %
+  Name: salidas, dtype: str
+  
+  Promedio entre semana: 73.8 | fin de semana: 45.2 (+63 %)
+  Franja de mayor salida promedio: 07:45
+
+6. MODELO SUPERVISADO: ¿SE PUEDE ANTICIPAR UNA FRANJA DE "ALTA DEMANDA"?
+------------------------------------------------------------------------------
+  Accesos excluidos de este modelo (volumen casi nulo; P75 degenera a 0): ['(18) Acceso Peatonal Oriental (Discapacidad)', '(19) Acceso Peatonal Occidental (Discapacidad)']
+  Filas para modelado: 8010 de 13290 totales
+  
+  Tasa positiva de 'alta_demanda' por acceso (debe rondar 25 % en los tres):
+  acceso
+  (03) Acceso Peatonal Oriental           0.251
+  (04) Acceso Peatonal Occidental         0.252
+  (21) Acceso Túnel PLAT1 Alimentación    0.253
+  Name: alta_demanda, dtype: float64
+
+SEPARACIÓN ENTRENAMIENTO / PRUEBA — **POR FECHA, NO AL AZAR**
+------------------------------------------------------------------------------
+  Entrenamiento: 6141 filas (2023-11-01 a 2023-11-23)
+  Prueba:        1869 filas (2023-11-24 a 2023-11-30)
+  
+  Variables del modelo: ['hora_decimal', 'dia_semana_num', 'acceso_(04) Acceso Peatonal Occidental', 'acceso_(21) Acceso Túnel PLAT1 Alimentación']
+  (el acceso 03 queda como categoría de referencia de las variables dummy)
+
+LÍNEA BASE
+------------------------------------------------------------------------------
+  Línea base ('siempre No alta demanda') — exactitud: 72.18 %
+  Matriz de confusión (línea base) [filas=real, columnas=predicho]:
+  [[1349    0]
+   [ 520    0]]
+  
+                   precision    recall  f1-score   support
+  
+  No alta demanda       0.72      1.00      0.84      1349
+     Alta demanda       0.00      0.00      0.00       520
+  
+         accuracy                           0.72      1869
+        macro avg       0.36      0.50      0.42      1869
+     weighted avg       0.52      0.72      0.61      1869
+
+ÁRBOL DE DECISIÓN (MODELO PRINCIPAL)
+------------------------------------------------------------------------------
+  Árbol (max_depth=5) — exactitud: 84.06 % | hojas: 18 | profundidad: 5
+  Clase 'Alta demanda' — precisión: 0.757 | exhaustividad (recall): 0.629 | F1: 0.687
+  
+  Mejora sobre la línea base: +11.88 puntos porcentuales de exactitud
+
+MATRIZ DE CONFUSIÓN DEL ÁRBOL
+------------------------------------------------------------------------------
+  [Figura 1 generada correctamente - ver notebook para la imagen]
+  [[VN, FP], [FN, VP]] = [[1244, 105], [193, 327]]
+
+VISUALIZACIÓN COMPLETA DEL ÁRBOL
+------------------------------------------------------------------------------
+  [Figura 2 generada correctamente - ver notebook para la imagen]
+
+IMPORTANCIA DE VARIABLES
+------------------------------------------------------------------------------
+  [Figura 3 generada correctamente - ver notebook para la imagen]
+  hora_decimal                                   0.457
+  acceso_(21) Acceso Túnel PLAT1 Alimentación    0.344
+  dia_semana_num                                 0.194
+  acceso_(04) Acceso Peatonal Occidental         0.004
+  dtype: float64
+
+¿VALE LA PENA UN ÁRBOL MÁS PROFUNDO? (SOBREAJUSTE Y COMPLEJIDAD)
+------------------------------------------------------------------------------
+                           modelo  hojas  profundidad  exactitud_train  exactitud_test  brecha_train_test
+                Árbol max_depth=5     18            5           0.8583          0.8406             0.0178
+  Árbol sin límite de profundidad    114           13           0.9129          0.8871             0.0258
+
+7. SEGMENTACIÓN: ¿QUÉ COMBINACIONES (ACCESO, FRANJA) COMPARTEN UN PERFIL DE USO?
+------------------------------------------------------------------------------
+  Combinaciones (acceso, franja) a segmentar: 443
+         hora_decimal  pct_del_acceso  ratio_finde_semana
+  count        443.00          443.00              443.00
+  mean          12.70            1.00                0.82
+  std            6.57            2.00                0.34
+  min            0.00            0.00                0.03
+  25%            7.25            0.01                0.59
+  50%           12.75            0.61                0.85
+  75%      ...(truncado)...
+
+ESCALADO Y SELECCIÓN DE *K* POR ÍNDICE DE SILUETA
+------------------------------------------------------------------------------
+  k=2: silueta=0.312, tamaños de grupo=[260, 183]
+  k=3: silueta=0.348, tamaños de grupo=[219, 6, 218]
+  k=4: silueta=0.361, tamaños de grupo=[192, 139, 5, 107]
+  k=5: silueta=0.384, tamaños de grupo=[12, 136, 92, 198, 5]
+  k=6: silueta=0.343, tamaños de grupo=[112, 88, 98, 5, 8, 132]
+  [Figura 4 generada correctamente - ver notebook para la imagen]
+
+AJUSTE FINAL (K = 4) Y PERFIL DE CADA GRUPO
+------------------------------------------------------------------------------
+  Índice de silueta final (k=4): 0.361
+             n  hora_media  pct_del_acceso_medio  ratio_finde_medio  \
+  cluster                                                             
+  0        192       18.84                  0.73               0.81   
+  1        139        7.15                  0.35               1.10   
+  2          5       15.75                 16.68               0.15   
+  3        107        8.76                  1.60               0.51   
+  
+           salidas_promedio  
+  cluster                    
+  0                   75.89  
+  1                   19.25  
+  2                   10.96  
+  3                  112.38  
+  
+  Composición por acceso (cuántas combinaciones de cada acceso cayeron en cada clúster):
+  acceso   (03) Acceso Peatonal Oriental  (04) Acceso Peatonal Occidental  \
+  cluster                                                                   
+  0                                   37                               38   
+  1                                   12                                9   
+  2                                    0                                0   
+  3                                   40                               42   
+  
+  acceso   (18) Acceso Peatonal Oriental (Discapacidad)  \
+  cluster                                                 
+  0                                                  34   
+  1                                                  47   
+  2                                                   4   
+  3                                                   3   
+  
+  acceso   (19) Acceso Peatonal Occidental (Discapacidad)  \
+  cluster                                                   
+  0                                                    40   
+  1                                                    42   
+  2                                                     1   
+  3                                                     5   
+  
+  acceso   (21) Acceso Túnel PLAT1 Alimentación  
+  cluster                                        
+  0                                          43  
+  1                                          29  
+  2                                           0  
+  3                                          17  
+  Detalle de las 5 combinaciones del clúster 2 (para verificar la etiqueta de 'ruido'):
+                                               acceso intervalo  hora_decimal  \
+  240    (18) Acceso Peatonal Oriental (Discapacidad)     17:30         17.50   
+  241    (18) Acceso Peatonal Oriental (Discapacidad)     17:45         17.75   
+  242    (18) Acceso Peatonal Oriental (Discapacidad)     18:00         18.00   
+  243    (18) Acceso Peatonal Oriental (Discapacidad)     18:15         18.25   
+  287   ...(truncado)...
+
+NOMBRANDO LOS GRUPOS Y SU ACCIÓN OPERATIVA
+------------------------------------------------------------------------------
+  [Figura 5 generada correctamente - ver notebook para la imagen]
+
+8. INFORME TÉCNICO: JUICIO PROFESIONAL SOBRE LA PUESTA EN PRODUCCIÓN
+------------------------------------------------------------------------------
+
+9. REPRODUCIBILIDAD Y ENTREGA
+------------------------------------------------------------------------------
+
+==============================================================================
+RESUMEN DE LA EJECUCION
+==============================================================================
+Celdas totales: 50 | Celdas de codigo ejecutadas: 19
+Figuras (graficos) generadas: 5
+Errores encontrados: 0
+RESULTADO: EJECUCION COMPLETA SIN ERRORES
