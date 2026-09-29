@@ -47,21 +47,21 @@ repo/
 
 ### 1. Notebook (Python)
 
-- Abrir `notebook/Notebook_Pipeline_IA_SITP_PortalEldorado.ipynb` en Google Colab o Jupyter.
-- Ejecutar todas las celdas en orden (**Entorno de ejecución → Reiniciar y ejecutar todo**, o el equivalente en Jupyter). El notebook lee `datos/raw_portal_eldorado_nov2023.csv`; si se ejecuta en Colab, subir ese archivo a la sesión primero (o ajustar la ruta).
+- Abrir `Notebook/Notebook_Pipeline_IA_SITP_PortalEldorado.ipynb` en Google Colab o Jupyter.
+- Ejecutar todas las celdas en orden (**Entorno de ejecución → Reiniciar y ejecutar todo**, o el equivalente en Jupyter). El notebook lee `Datos/raw_portal_eldorado_nov2023.csv`; si se ejecuta en Colab, subir ese archivo a la sesión primero (o ajustar la ruta).
 - El notebook regenera `sitp_portal_eldorado_depurado.csv` como parte del ETL — el archivo crudo nunca se modifica.
 - Dependencias: `pandas`, `numpy`, `scikit-learn`, `matplotlib` (estándar en Colab).
 - Enlace a Colab: **`<< Oscar: pegar aquí el enlace a tu copia en Google Colab >>`**
 
 ### 2. Tablero (Power BI)
 
-- Abrir `dashboard/Demanda Operacional - Portal Eldorado.pbix` con Power BI Desktop.
-- La fuente de datos es `dashboard/Procesado_sitp_portal_eldorado_nov2023.xlsx` (mismo archivo, en la misma carpeta relativa); si Power BI pide actualizar la ruta del origen de datos, apuntarlo a ese archivo.
-- Para verlo sin abrir Power BI: `dashboard/Capturas_Dashboard_Portal_Eldorado.pdf`.
+- Abrir `Dashboard/Demanda Operacional - Portal Eldorado.pbix` con Power BI Desktop.
+- La fuente de datos es `Dashboard/Procesado_sitp_portal_eldorado_nov2023.xlsx` (mismo archivo, en la misma carpeta relativa); si Power BI pide actualizar la ruta del origen de datos, apuntarlo a ese archivo.
+- Para verlo sin abrir Power BI: `Dashboard/Capturas_Dashboard_Portal_Eldorado.pdf`.
 
 ### 3. Informe técnico y presentación
 
-- Se abren directamente: `informe/Informe_Tecnico_Final_SITP_PortalEldorado.pdf` y `presentacion/Presentacion_Final_SITP_PortalEldorado.pptx`.
+- Se abren directamente: `Informe/Informe_Tecnico_Final_SITP_PortalEldorado.pdf` y `Presentacion/Presentacion_Final_SITP_PortalEldorado.pptx`.
 - La presentación incluye notas del orador (guion de apoyo) en cada diapositiva, visibles en la vista "Notas del orador" de PowerPoint.
 
 ## Resumen de resultados
@@ -75,31 +75,3 @@ repo/
 Este proyecto se desarrolló con apoyo de un asistente de IA (Claude, Anthropic) para: estructurar y depurar el código de ETL/EDA, construir y comparar los modelos de machine learning, generar las visualizaciones, y redactar el informe técnico y la presentación a partir de los resultados obtenidos. Todas las cifras reportadas se calculan en vivo en el notebook (nada se escribió a mano de forma independiente del código que lo produce). La declaración completa está en la Sección 7 del informe técnico.
 
 ---
-
-## Cómo subir este repositorio a GitHub (instrucciones para Oscar)
-
-Este proyecto vive en el GitHub de Oscar: **https://github.com/oscaring176/Master**. Como ese repositorio ya contiene el trabajo de otras semanas del curso, la recomendación es subir esta carpeta `repo/` como una subcarpeta propia (por ejemplo `CIA6041-Proyecto-Final/`) dentro de tu repositorio existente, para no mezclar sus archivos con los de otras entregas. Ajusta el nombre si ya tienes una convención distinta.
-
-Pasos, desde tu computador (con Git instalado), una vez tengas esta carpeta `repo/` descargada y con los 3 archivos de `dashboard/` ya copiados adentro:
-
-```bash
-# 1. Clonar tu repositorio existente (si aún no lo tienes localmente)
-git clone https://github.com/oscaring176/Master.git
-cd Master
-
-# 2. Copiar el contenido de esta carpeta "repo/" dentro de una subcarpeta del proyecto
-#    (ajusta el nombre si prefieres otro)
-mkdir -p CIA6041-Proyecto-Final
-cp -r /ruta/donde/descargaste/repo/* CIA6041-Proyecto-Final/
-
-# 3. Agregar, confirmar y subir
-git add CIA6041-Proyecto-Final/
-git commit -m "Proyecto final SEM10 - Pipeline de IA SITP Portal Eldorado"
-git push origin main
-```
-
-Después de subirlo:
-
-- Entra a **github.com/oscaring176/Master → Settings → Collaborators** y agrega al Ing. Jhony A. Guzmán H. con su usuario o correo de GitHub, tal como lo mencionaste.
-- Copia el enlace a la subcarpeta (por ejemplo `https://github.com/oscaring176/Master/tree/main/CIA6041-Proyecto-Final`) para adjuntarlo en Blackboard.
-- Si el repositorio es privado, confirma que la invitación al docente haya sido aceptada antes de la entrega.
