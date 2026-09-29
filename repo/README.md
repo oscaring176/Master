@@ -48,7 +48,7 @@ repo/
 - Ejecutar todas las celdas en orden (**Entorno de ejecución → Reiniciar y ejecutar todo**, o el equivalente en Jupyter). El notebook lee `Datos/raw_portal_eldorado_nov2023.csv`; si se ejecuta en Colab, subir ese archivo a la sesión primero (o ajustar la ruta).
 - El notebook regenera `sitp_portal_eldorado_depurado.csv` como parte del ETL — el archivo crudo nunca se modifica.
 - Dependencias: `pandas`, `numpy`, `scikit-learn`, `matplotlib` (estándar en Colab).
-- Enlace a Colab: **`<< Oscar: pegar aquí el enlace a tu copia en Google Colab >>`**
+- Enlace a Colab: **`<< https://colab.research.google.com/drive/1dhfCjn82gMxZMOLTtflunGTJZZGCfDhm?usp=sharing >>`**
 
 ### 2. Tablero (Power BI)
 
