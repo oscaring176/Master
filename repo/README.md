@@ -40,9 +40,6 @@ repo/
     ├── Procesado_sitp_portal_eldorado_nov2023.xlsx          fuente de datos del tablero (agregar antes de subir)
     └── Capturas_Dashboard_Portal_Eldorado.pdf                PDF con capturas de las vistas principales (agregar antes de subir)
 ```
-
-> **Nota:** los tres archivos de `dashboard/` viven en el computador de Oscar y no se generaron en este entorno de trabajo — cópialos ahí antes de hacer el `git add` (ver instrucciones de subida más abajo). El PDF de capturas se genera fácil desde Power BI Desktop: **Archivo → Exportar → Exportar a PDF**, que exporta todas las páginas del tablero en un solo archivo.
-
 ## Cómo ejecutar el proyecto
 
 ### 1. Notebook (Python)
